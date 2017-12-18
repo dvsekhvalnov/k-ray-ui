@@ -1,0 +1,123 @@
+.main {
+    background: #f1f4f5;
+    min-height: 100%;
+    position: relative;
+}
+
+.text-wrap.lines.one {
+	max-height: 1.5em;
+}
+
+.text-wrap.lines.two {
+	max-height: 2.9em;
+}
+
+.text-wrap.lines.three {
+	max-height: 4.5em;
+}
+
+.text-wrap.lines.four {
+	max-height: 5.8em;
+}
+
+.text-wrap.lines.five {
+	max-height: 7.3em;
+}
+
+.text-wrap.lines.ten {
+	max-height: 15em;
+}
+
+.text-wrap.lines.fifteen {
+	max-height: 22em;
+}
+
+.text-wrap.lines {
+    overflow: hidden;
+}
+.text-wrap {
+	word-break: break-all;
+}
+
+.ui.secondary.menu.blue a.item:not(.icon) {
+	color: #4183c4;
+}
+
+.ui.sidebar.visible ~ .pusher {
+    width: calc(100% - 150px);
+}
+
+.ui.inverted.grey.menu {
+	background-color: #858585;
+}
+
+.ui.menu.tabular {
+    border-radius: 0px;
+}
+
+.ui.segment.basic.search {
+	background-color: #eee;
+	border-top: 0px;
+	border-left: 0px;
+	border-right: 0px;
+}
+
+.ui.grid .row .column.right-attached {
+	padding-right:0px;
+}
+
+.ui.grid .row .column.left-attached {
+	padding-left:0px;
+}
+
+.ui.grid .row.top-attached {
+	padding-top: 0px;
+}
+
+.ui.grid .row.bottom-attached {
+	padding-bottom: 0px;
+}
+
+.ui.segment.compact.tip {
+	padding: 7px;
+}
+
+.ui.segment.basic.attached.top {
+	padding-top:0px;
+}
+
+.ui.segment.basic.top-attached {
+	padding-top:0px;
+}
+
+.ui.segment.basic.left-attached {
+	padding-left:0px;
+}
+
+.ui.tabular.menu.plain {
+	background-image: linear-gradient(180deg,#f7f7f7,#eee);
+}
+
+.ui.tabular.menu.plain .item.active:first-child {
+	border-left:0px;
+}
+.ui.tabular.menu.plain .item, .ui.tabular.menu.plain .item.active {
+	border-top:0px;
+	border-radius: 0 !important;
+}
+
+.ui.table.plain {
+    border-radius:0;
+}
+
+.ui.compact.table.plain th {
+	padding:5px;
+}
+
+.ui.dropdown.blue div.text {
+	color: #4183c4;
+}
+
+.ui.dropdown.blue .dropdown.icon {
+	color: #2185d0;
+}

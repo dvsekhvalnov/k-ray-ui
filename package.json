@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "copy-to-clipboard": "^3.0.8",
+    "filesize": "^3.5.11",
+    "humanize-duration": "^3.12.0",
+    "js-base64": "^2.4.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.19.3",
+    "qs": "^6.5.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-config": "^1.0.0-beta.4",
+    "react-router-dom": "^4.2.2",
+    "recharts": "^1.0.0-beta.0",
+    "redux": "^3.7.2",
+    "redux-api-middleware": "^2.0.1",
+    "redux-logger": "^3.0.6",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.75.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.7",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.5",
+    "html-webpack-plugin": "^2.30.1",
+    "style-loader": "^0.19.0",
+    "url-loader": "^0.6.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
+  },
+  "scripts": {
+    "build": "webpack --progress --colors --config ./webpack.config.js",
+    "start": "webpack-dev-server --port 8081 --progress --colors --hot --history-api-fallback --config ./webpack.config.js"
+  }
+}

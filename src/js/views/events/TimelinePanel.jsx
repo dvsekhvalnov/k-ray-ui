@@ -20,7 +20,7 @@ class TimelinePanel extends Component {
 				<Segment basic className="top-attached left-attached">
 						<FormatTimelineMenu {...this.props.timeline} />
 						<FormatResultsMenu {...this.props.results}
-							onItemsPerPageChange={this.props.onItemsPerPageChange}/>
+							onItemsPerPageChange={this.props.onItemsPerPageChange}/>					
 						<Pager {...this.props.pager} total={this.props.data.total} perPage={this.props.results.itemsPerPage} />
 				</Segment>
 				{!this.props.timeline.hidden &&

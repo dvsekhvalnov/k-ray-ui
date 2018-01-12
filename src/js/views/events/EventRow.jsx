@@ -10,14 +10,14 @@ import {
   Icon,
 } from "semantic-ui-react";
 import React, { Component } from "react"
+import _ from "lodash";
 import css from "classnames";
 import filesize from "filesize"
 import moment from "moment";
 
+import { EXPORT_MSG_URL } from '../../api';
 import { push } from '../../utils/url';
 import Clipboard from "../controls/Clipboard"
-
-import _ from "lodash";
 
 class Tag extends React.Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class EventRow extends Component {
       return result + " " + name + "=" + value;
     }, "");
 
-    push(this.props.history, { [param]: paramValue.trim() }, { append:true });
+    push(this.props.history, { [param]: paramValue.trim(), page:null }, { append:true });
   }
 
   render() {
@@ -78,6 +78,8 @@ class EventRow extends Component {
     });
 
     const timestampMs = this.props.msg.timestamp / 1000000
+
+    const downloadUrl = EXPORT_MSG_URL(topic, partition, offset);
 
     return (
       <Table.Row>
@@ -117,7 +119,7 @@ class EventRow extends Component {
                 <Button.Group size="mini">
                   <Clipboard text={msg} />
                   <Button as="a" icon="expand"/>
-                  <Button as="a" icon="cloud download"/>
+                  <Button as="a" icon="cloud download" href={downloadUrl}/>
                 </Button.Group>
               </Grid.Column>
             </Grid>

@@ -20,7 +20,10 @@ class FormatResultsMenu extends Component {
   }
 
   onItemsPerPageChange(count) {
-    push(this.props.history, {"perPage": count});
+    push(this.props.history, {
+      "perPage": count,
+      "page": null
+    });
   }
 
   render() {

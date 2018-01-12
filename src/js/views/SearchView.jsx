@@ -1,5 +1,5 @@
 import {
-  Button,
+  Dropdown,
   Grid,
   Icon,
   Label,
@@ -14,10 +14,11 @@ import duration from "humanize-duration";
 import moment from 'moment';
 import qs from "qs";
 
+import { earliest, latest } from '../selectors/timerange';
 import { getPage, getVisiblePages } from '../selectors/pager';
 import { push } from '../utils/url';
+import { resetSearch, updateTimerange, updateQuery, updateLocation, updateItemsPerPage, updatePage } from "../actions";
 import { searchEvents } from "../actions-api";
-import { updateQuery, updateLocation, updateItemsPerPage, updatePage } from "../actions";
 import EventsPane from './events/EventsPane';
 import SearchPane from './events/SearchPane';
 
@@ -26,6 +27,10 @@ const urlToPane = {
   "/search/trace": 1,
   "/search/streams": 2
 }
+
+const ResultsLabel = (props) =>
+  <span><Icon name="check" color="green"/> {props.data.total} events ({moment(props.data.earliest).utc().format("DD/M/YYYY hh:mm:ss.SSS A")} to {moment(props.data.latest).utc().format("DD/M/YYYY hh:mm:ss.SSS A")}) in {duration(props.data.took)}.</span>
+
 
 export class SearchView extends PureComponent {
 
@@ -38,8 +43,6 @@ export class SearchView extends PureComponent {
 
   syncUrlState(props, next) {
 
-    console.log("store", this.context.store);
-
     const url = props.history.location.pathname;
     const search = props.history.location.search;
 
@@ -51,26 +54,34 @@ export class SearchView extends PureComponent {
       //bind URL to update state actions
       const params = qs.parse(search, { ignoreQueryPrefix: true });
 
-      const page = getPage(params["page"], props.data.total, props.results.itemsPerPage)
-      const visiblePages = getVisiblePages(page, props.data.total, props.results.itemsPerPage)
+      const page = getPage(params["page"])
       const query = params["query"]
       const perPage = isNaN(params["perPage"]) ? 50 : parseInt(params["perPage"])
+      const timerange = params["timerange"];
+
+      let offset = props.data.offsets[page]
+
+      if(!params["page"]) {
+        props.resetSearch()
+        offset = null
+      }
 
       props.updateQuery(query);
-      props.updatePage(page, visiblePages);
+      props.updatePage(page);
       props.updateItemsPerPage(perPage);
+      props.updateTimerange(timerange);
 
-      //TODO: fetch data from API if search changed
+      //TODO: fetch data from API if search params changed only
       props.searchEvents({
         "search": query,
-        "earliest": 1513357200000,
-        "latest": 1513360628804,
+        "earliest": earliest(timerange),
+        "latest": latest(timerange),
         "paging": {
           "limit": perPage,
-          "pages": visiblePages
+          "pages": getVisiblePages(page, props.data.total, props.results.itemsPerPage)
         },
-        "page": page,
-        "offset": props.data.offsets[page]
+        page,
+        offset,
       });
     }
   }
@@ -87,7 +98,7 @@ export class SearchView extends PureComponent {
 
   onPerformSearch(query) {
     if(query || query === "") {
-      push(this.props.history, {"query": query});
+      push(this.props.history, {"query": query, "page": null});
     }
   }
 
@@ -106,20 +117,29 @@ export class SearchView extends PureComponent {
       <Grid centered>
         <Grid.Row className="bottom-attached">
           <Grid.Column width="16">
-            <SearchPane value = {this.props.query} onSearch={this.onPerformSearch} loading={this.props.searchInProgress}/>
+            <SearchPane
+              value = {this.props.query}
+              range={this.props.time.range}
+              onSearch={this.onPerformSearch}
+              loading={this.props.searchInProgress}/>
           </Grid.Column>
         </Grid.Row>
         <Grid.Row stretched className="bottom-attached top-attached">
           <Grid.Column width="8" className="right-attached">
             <Segment basic attached className="search top" size="tiny">
-              <Icon name="check" color="green"/> {this.props.data.total} events ({moment(this.props.data.earliest).utc().format("DD/M/YYYY hh:mm:ss.SSS A")} to {moment(this.props.data.latest).utc().format("DD/M/YYYY hh:mm:ss.SSS A")}) in {duration(this.props.data.took)}.
+              {!this.props.searchInProgress && <ResultsLabel {...this.props} /> }
             </Segment>
           </Grid.Column>
           <Grid.Column width="8" textAlign="right" className="left-attached">
             <Segment basic attached className="search top" size="tiny">
-              <Button.Group size="tiny">
-                <Button as="a" content="Export" icon="cloud download" labelPosition="right" />
-              </Button.Group>
+
+              <Menu floated="right" size="tiny" borderless secondary>
+    		        <Menu.Item as="a">
+      			      <Icon name="cloud download" color="blue"/>
+                  <Dropdown text="Export search" className="blue">
+                  </Dropdown>
+                </Menu.Item>
+              </Menu>
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -146,4 +166,4 @@ const toProps = (state) => {
   }
 };
 
-export default connect(toProps, { updateLocation, updateQuery, updateItemsPerPage, updatePage, searchEvents })(SearchView);
+export default connect(toProps, { resetSearch, updateTimerange, updateLocation, updateQuery, updateItemsPerPage, updatePage, searchEvents })(SearchView);

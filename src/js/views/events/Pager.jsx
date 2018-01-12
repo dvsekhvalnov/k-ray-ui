@@ -2,6 +2,7 @@ import { Icon, Menu } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import React, { Component } from 'react';
 
+import { getVisiblePages } from '../../selectors/pager';
 import { push } from '../../utils/url';
 
 const pagesPerSheet = 4;
@@ -30,10 +31,19 @@ class Pager extends Component {
 
 	render() {
 
-		const currentPage = this.props.currentPage;
-		const visiblePages = this.props.visiblePages;
+		let currentPage = this.props.currentPage;
 
-		const lastPage = Math.floor(this.props.total / this.props.perPage);
+		const visiblePages = getVisiblePages(currentPage, this.props.total, this.props.perPage);
+
+		const lastPage = Math.ceil(this.props.total / this.props.perPage);
+
+		if (currentPage < 1) {
+	    currentPage = 1
+	  }
+
+	  if(currentPage > lastPage) {
+			currentPage = lastPage;
+		}
 
 		let rightPage = 0;
 		let leftPage = 0;
@@ -44,7 +54,7 @@ class Pager extends Component {
 		}
 
 		const morePages = lastPage > rightPage;
-		const lessPages = leftPage > 1;		
+		const lessPages = leftPage > 1;
 
 		let items = [];
 
@@ -58,15 +68,19 @@ class Pager extends Component {
 
 		return (
 			<Menu floated="right" size="mini" borderless secondary color="blue">
+					{ items.length > 0 &&
 					<Menu.Item as="a" icon disabled={currentPage === 1} onClick={this.onPrevClick}>
 						<Icon name="left chevron" />
 					</Menu.Item>
+					}
 					{ lessPages &&  <Menu.Item>...</Menu.Item> }
 					{ items }
 					{ morePages && <Menu.Item>...</Menu.Item> }
+					{ items.length > 0 &&
 			    <Menu.Item as="a" icon disabled={currentPage === lastPage} onClick={this.onNextClick}>
 			      <Icon name="right chevron" />
 			    </Menu.Item>
+					}
 			</Menu>
 		);
 	}

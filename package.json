@@ -26,6 +26,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "compression-webpack-plugin": "^1.1.2",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.5",
@@ -37,6 +38,7 @@
   },
   "scripts": {
     "build": "webpack --progress --colors --config ./webpack.config.js",
+    "package": "webpack -p --progress --colors --config ./webpack.config.js",
     "start": "webpack-dev-server --port 8081 --progress --colors --hot --history-api-fallback --config ./webpack.config.js"
   }
 }

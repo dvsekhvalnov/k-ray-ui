@@ -1,25 +1,16 @@
 const pagesPerSheet = 4;
 
-const getPage = (param, total, itemsPerPage) => {
-  const lastPage = Math.floor(total / itemsPerPage);
+const getPage = (param) => {
   let page = isNaN(param) ? 1 : parseInt(param)
   if (page < 1) {
     page = 1
   }
 
-  if(page > lastPage) {
-		page = lastPage;
-	}
-
   return page
 }
 
 const getVisiblePages = (page, total, itemsPerPage) => {
-  const lastPage = Math.floor(total / itemsPerPage);
-
-  console.log("page=", page);
-  console.log("total=", total);
-  console.log("itemsPerPage=", itemsPerPage);
+  const lastPage = Math.ceil  (total / itemsPerPage);
 
 	let leftPage = Math.max(1, page - pagesPerSheet);
 	const rightPage = Math.min(lastPage, leftPage + pagesPerSheet * 2);
@@ -28,6 +19,8 @@ const getVisiblePages = (page, total, itemsPerPage) => {
 	if(rightPage == lastPage) {
 		leftPage = Math.max(1, rightPage - pagesPerSheet * 2);
 	}
+
+  // if lastPage = 0
 
   return _.range(leftPage, rightPage+1)
 }

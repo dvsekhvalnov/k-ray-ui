@@ -1,23 +1,21 @@
-import _ from "lodash"
 import { Base64 } from 'js-base64';
+import _ from "lodash";
+import moment from "moment";
 
 import {
   COMPACT_TIMELINE,
   HIDE_TIMELINE,
   MAX_LINES_BINARY,
   MAX_LINES_JSON,
+  RESET_SEARCH,
   TRIGGER_TIMELINE_DETAILS,
   UPDATE_ITEMS_PER_PAGE,
-  UPDATE_QUERY,
   UPDATE_PAGE,
-} from "../actions";
-
-import {
-  SEARCH_SUCCESS,
-  SEARCH_REQUEST,
-  SEARCH_FAILED
- } from '../actions-api';
-import events from "../events";
+  UPDATE_QUERY,
+  UPDATE_TIME_RANGE,
+} from '../actions';
+import { SEARCH_SUCCESS, SEARCH_REQUEST } from '../actions-api';
+import {getVisiblePages} from "../selectors/pager"
 import timeline from "../timeline";
 
 const initial = {
@@ -25,12 +23,12 @@ const initial = {
   searchInProgress: false,
   timeRange: "",
   data: {
-    total: 12345,
+    total: 0,
     took: 0,
-    earliest: 1489516832234,
-    latest: 1490994758987,
+    earliest: moment.utc().subtract(5, "minutes").valueOf(),
+    latest: moment.utc().valueOf(),
     graph: timeline,
-    rows: events,
+    rows: [],
     offsets: {},
   },
   timeline: {
@@ -47,14 +45,28 @@ const initial = {
         maxLines: "all",
       },
   },
+  time: {
+    range: "last_5_min"
+  },
   pager: {
-    visiblePages: [1,2,3,4,5,6,7,8,9],
-    currentPage: 5,
+    visiblePages: [],
+    currentPage: 1,
   },
 };
 
 export default (state = initial, action) => {
   switch (action.type) {
+
+    case RESET_SEARCH : {
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          offsets: {},
+          //TODO: reset graph here as well
+        }
+      }
+    }
 
     case UPDATE_QUERY : {
       return {
@@ -68,8 +80,17 @@ export default (state = initial, action) => {
         ...state,
         pager: {
           ...state.pager,
-          currentPage: action.value,
-          visiblePages: action.visiblePages
+          currentPage: action.value
+        }
+      };
+    }
+
+    case UPDATE_TIME_RANGE : {
+      return {
+        ...state,
+        time: {
+          ...state.time,
+          range: action.value,
         }
       };
     }
@@ -153,6 +174,10 @@ export default (state = initial, action) => {
       return {
         ...state,
         searchInProgress: false,
+        pager: {
+          ...state.pager,
+          visiblePages: getVisiblePages(state.pager.currentPage, action.payload.total, state.results.itemsPerPage)
+        },
         data: {
           ...state.data,
           total: action.payload.total,

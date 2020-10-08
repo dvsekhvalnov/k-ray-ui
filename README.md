@@ -15,16 +15,22 @@ Visual design heavily inspired by Splunk.
 
 ## Screenshots
 <p>
+    <div>Explore every bit of kafka:</div>
     <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/explore-kafka-stream-internals.png?raw=true" width="400" alt="Explore every bit of kafka" />
+    <div>Travel in time:</div>
     <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/filter-by-time.png?raw=true" width="400" alt="Time filters" />
 </p>
 <p>
+    <div>Dig inside your data:</div>
     <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/format-json-messages.png?raw=true" width="400" alt="Structured json views" />
+    <div>You are in control:</div>
     <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/results-formatting.png?raw=true" width="400" alt="Control your options" />
 </p>
 <p>
+    <div>Do things the way you want it:</div>
     <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/timeline-formatting.png?raw=true" width="400" alt="Adjust timeline" />
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/copy-and-download-messages.png?raw=true" width="400" alt="Structured json views" />
+    <div>Get samples easily:</div>
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/copy-and-download-messages.png?raw=true" width="400" alt="Copy and download" />
 </p>
 
 ## Maintainers wanted

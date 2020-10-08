@@ -15,16 +15,16 @@ Visual design heavily expired by Splunk.
 
 ## Screenshots
 <p>
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/explore-kafka-stream-internals.png?raw=true" width="300" alt="Explore every bit of kafka" />
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/filter-by-time.png?raw=true" width="300" alt="Time filters" />
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/explore-kafka-stream-internals.png?raw=true" width="400" alt="Explore every bit of kafka" />
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/filter-by-time.png?raw=true" width="400" alt="Time filters" />
 </p>
 <p>
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/format-json-messages.png?raw=true" width="300" alt="Structured json views" />
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/results-formatting.png?raw=true" width="300" alt="Control your options" />
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/format-json-messages.png?raw=true" width="400" alt="Structured json views" />
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/results-formatting.png?raw=true" width="400" alt="Control your options" />
 </p>
 <p>
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/timeline-formatting.png?raw=true" width="300" alt="Adjust timeline" />
-    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/copy-and-download-messages.png?raw=true" width="300" alt="Structured json views" />
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/timeline-formatting.png?raw=true" width="400" alt="Adjust timeline" />
+    <img src="https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/copy-and-download-messages.png?raw=true" width="400" alt="Structured json views" />
 </p>
 
 ## Maintainers wanted

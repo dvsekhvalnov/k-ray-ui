@@ -2,6 +2,7 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
+    "fast-chunk-string": "^1.0.1",
     "filesize": "^3.5.11",
     "humanize-duration": "^3.12.0",
     "js-base64": "^2.4.0",
@@ -10,6 +11,7 @@
     "qs": "^6.5.1",
     "react": "^16.2.0",
     "react-dom": "^16.0.0",
+    "react-json-view": "^1.16.1",
     "react-redux": "^5.0.6",
     "react-router-config": "^1.0.0-beta.4",
     "react-router-dom": "^4.2.2",
@@ -39,6 +41,6 @@
   "scripts": {
     "build": "webpack --progress --colors --config ./webpack.config.js",
     "package": "webpack -p --progress --colors --config ./webpack.config.js",
-    "start": "webpack-dev-server --port 8081 --progress --colors --hot --history-api-fallback --config ./webpack.config.js"
+    "start": "webpack-dev-server --devtool source-map --output-pathinfo --port 8082 --progress --colors --hot --history-api-fallback --config ./webpack.config.js"
   }
 }

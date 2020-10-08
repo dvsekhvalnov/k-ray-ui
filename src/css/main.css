@@ -4,6 +4,43 @@
     position: relative;
 }
 
+.scrollable {
+  max-height: 300px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.scrollable pre {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.scrollable:hover {
+  overflow-y: auto;
+}
+
+@supports (overflow-y: overlay) {
+  .scrollable:hover {
+    overflow-y: overlay;
+  }
+}
+
+.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+/* ::-webkit-scrollbar-track-piece:start {
+    background: transparent url('images/backgrounds/scrollbar.png') repeat-y !important;
+}
+
+::-webkit-scrollbar-track-piece:end {
+    background: transparent url('images/backgrounds/scrollbar.png') repeat-y !important;
+} */
+
+.ui.grid.fixed.width {
+  max-width: 62em;
+}
+
+
 .text-wrap.lines.one {
 	max-height: 1.5em;
 }
@@ -38,14 +75,20 @@
 .text-wrap {
 	word-break: break-all;
 }
+.ui.dropdown .menu.tiny>.header {
+  font-size: .85714286em !important;
+}
+.ui.menu .ui.dropdown .menu.tiny>.item {
+  font-size: .85714286rem !important;
+}
 
 .ui.secondary.menu.blue a.item:not(.icon) {
 	color: #4183c4;
 }
 
-.ui.sidebar.visible ~ .pusher {
+/* .ui.sidebar.visible ~ .pusher {
     width: calc(100% - 150px);
-}
+} */
 
 .ui.inverted.grey.menu {
 	background-color: #858585;

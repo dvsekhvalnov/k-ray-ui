@@ -1,15 +1,16 @@
 import {
-  List,
   Button,
   Dropdown,
-  Label,
-  Popup,
   Grid,
-  Container,
-  Table,
   Icon,
-} from "semantic-ui-react";
+  Label,
+  List,
+  Popup,
+  Table,
+} from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import React, { Component } from "react"
+import ReactJson from "react-json-view"
 import _ from "lodash";
 import css from "classnames";
 import filesize from "filesize"
@@ -17,7 +18,10 @@ import moment from "moment";
 
 import { EXPORT_MSG_URL } from '../../api';
 import { push } from '../../utils/url';
+import { toggleRowPrettyPrint } from '../../actions';
 import Clipboard from "../controls/Clipboard"
+import KeyDetails from './KeyDetails';
+import ToggleButton from '../controls/ToggleButton';
 
 class Tag extends React.Component {
   constructor(props) {
@@ -54,94 +58,124 @@ class EventRow extends Component {
 
   render() {
 
-    const key = this.props.msg.key.value || "null";
-    const keySize = filesize(this.props.msg.key.size, {symbols: {B: "bytes"}});
+    const event = this.props.row.msg;
+    const ui = this.props.row.ui.value;
 
-    const messageType = this.props.msg.tags["messageType"] && this.props.msg.tags["messageType"].value;
-    const messageAction = this.props.msg.tags["messageType"] && this.props.msg.tags["messageType"].details;
-    const correlationId = this.props.msg.tags["correlationId"] && this.props.msg.tags["correlationId"].value;
+    const key = _.truncate(event.key.value || "null", { "length": 50 });
+    const keySize = filesize(event.key.size, {symbols: {B: "bytes"}});
+    const valueSize = filesize(event.value.size, {symbols: {B: "bytes"}});
 
-    const maxLines = this.props.display[this.props.msg.type].maxLines;
+    const type = event.value.type;
+
+    const messageType = event.tags["messageType"] && event.tags["messageType"].value;
+    const messageAction = event.tags["messageType"] && event.tags["messageType"].details;
+    const correlationId = event.tags["correlationId"] && event.tags["correlationId"].value;
+
+    const maxLines = this.props.display[event.value.type].maxLines;
     const wrapLines = (maxLines !== "all");
+    const showTopicInfo = this.props.display.general.topicDetails;
+    const showTimestampInfo = this.props.display.general.extendedTimestampDetails;
+    const showEnrichments = this.props.display.general.enrichmentDetails;
 
-    const host = this.props.msg.tags["host"] && this.props.msg.tags["host"].value;
-    const service = this.props.msg.tags["service"] && this.props.msg.tags["service"].value;
+    const host = event.tags["host"] && event.tags["host"].value;
+    const service = event.tags["service"] && event.tags["service"].value;
 
-    const msg = this.props.msg.value.value;
-    const topic = this.props.msg.topic;
-    const partition = this.props.msg.partition;
-    const offset = this.props.msg.offset;
+    const msg = event.value.value;
+    const topic = event.topic;
+    const partition = event.partition;
+    const offset = event.offset;
 
     const msgStyles = css("text-wrap", {
       "lines": wrapLines,
       [maxLines]: wrapLines,
     });
 
-    const timestampMs = this.props.msg.timestamp / 1000000
+    const timestampMs = event.timestamp / 1000000;
+    const blockTimestampMs = event.blockTimestamp / 1000000;
 
     const downloadUrl = EXPORT_MSG_URL(topic, partition, offset);
+
+    const message = (type === "json" && ui.prettyPrint)
+                      ? <ReactJson src={event.value.structured} />
+                      : event.value.value;
 
     return (
       <Table.Row>
         <Table.Cell><Icon name="chevron right"/></Table.Cell>
         <Table.Cell>{moment(timestampMs).utc().format("MM/DD/YYYY hh:mm:ss.SSS A ZZ")}</Table.Cell>
         <Table.Cell>
-          <Container fluid>
-            <Grid>
-              <Grid.Column floated="left" width={14}>
-                <Label.Group>
-                  <Popup hoverable on="click" flowing trigger={<Tag color="blue" icon="key" details={keySize}>[{key}]</Tag>}>Detail</Popup>
-                  { messageType &&
-                  <Tag color="brown" details={`[${messageAction}]`}
-                    onClick={() => this.onFilter("query", { messageType, messageAction })}
-                  >[{messageType}]</Tag>
-                  }
-                  { correlationId &&
-                  <Dropdown className="blue" inline trigger={<Tag color = "green" icon="random">{correlationId}</Tag>}>
-                    <Dropdown.Menu>
-                      <Dropdown.Item
-                        text="Filter"
-                        icon="filter"
-                        onClick={()=>{this.onFilter("query", { correlationId })}}/>
-                      <Dropdown.Item text="Trace" icon="random" disabled/>
-                      <Dropdown.Item
-                        as="a"
-                        target="_blank"
-                        href={`https://splunk.pingidentity.com/en-US/app/saas_ops/search?q=search ${correlationId}&earliest=0&latest=`}
-                        text="Splunk"
-                        icon={{name: "chevron right", color:"green"}} />
-                    </Dropdown.Menu>
-                  </Dropdown>
-                  }
-                </Label.Group>
-              </Grid.Column>
-              <Grid.Column floated="right" width={2} textAlign="right">
-                <Button.Group size="mini">
-                  <Clipboard text={msg} />
-                  <Button as="a" icon="expand"/>
-                  <Button as="a" icon="cloud download" href={downloadUrl}/>
-                </Button.Group>
-              </Grid.Column>
-            </Grid>
+          <Grid stackable>
+            <Grid.Column width={13}>
+              <Label.Group>
+                <Popup flowing hoverable={false} on="click" trigger={<Tag color="blue" icon="key" details={keySize}>[{key}]</Tag>}>
+                  <KeyDetails {...this.props.row} />
+                </Popup>
+                { showEnrichments && messageType &&
+                <Tag color="brown" details={`[${messageAction}]`}
+                  onClick={() => this.onFilter("query", { messageType, messageAction })}
+                >[{messageType}]</Tag>
+                }
+                { showEnrichments && correlationId &&
+                <Dropdown className="blue" inline trigger={<Tag color = "green" icon="random">{correlationId}</Tag>}>
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      text="Filter"
+                      icon="filter"
+                      onClick={()=>{this.onFilter("query", { correlationId })}}/>
+                    <Dropdown.Item text="Trace" icon="random" disabled/>
+                    <Dropdown.Item
+                      as="a"
+                      target="_blank"
+                      href={`https://splunk.pingidentity.com/en-US/app/saas_ops/search?q=search ${correlationId}&earliest=0&latest=`}
+                      text="Splunk"
+                      icon={{name: "chevron right", color:"green"}} />
+                  </Dropdown.Menu>
+                </Dropdown>
+                }
+              </Label.Group>
+            </Grid.Column>
+            <Grid.Column width={3} textAlign="right">
+              <Button.Group size="mini">
+                <Clipboard text={msg} />
+                <ToggleButton as="a" icon="code" checked={ui.prettyPrint} onClick={
+                  () => this.props.toggleRowPrettyPrint(this.props.row.index)
+                }/>
+                <Button as="a" icon="expand"/>
+                <Button as="a" icon="cloud download" href={downloadUrl}/>
+              </Button.Group>
+            </Grid.Column>
+          </Grid>
 
-            <div className={msgStyles}>{msg}</div>
-          </Container>
+          <div className={msgStyles}>{message}</div>
 
           <List divided horizontal link size="small">
-            { host &&
+            { showEnrichments && host &&
               <List.Item as="a"
                 onClick={() => {this.onFilter("query", {host});}}>host={host}</List.Item>
               }
-            { service &&
+            { showEnrichments && service &&
               <List.Item as="a"
                  onClick={() => {this.onFilter("query", {service});}}>service={service}</List.Item>
             }
+            { showTopicInfo &&
             <List.Item as="a"
               onClick={() => {this.onFilter("query", {topic});}}>topic={topic}</List.Item>
+            }
+            { showTopicInfo &&
             <List.Item as="a"
               onClick={()=>{this.onFilter("query", { topic, partition })}}>partition={partition}</List.Item>
+            }
+            { showTopicInfo &&
             <List.Item as="a"
               onClick={()=>{this.onFilter("query", { topic, partition, offset })}}>offset={offset}</List.Item>
+            }
+            <List.Item as="a">size={valueSize}</List.Item>
+            { showTimestampInfo &&
+            <List.Item as="a">timestamp={moment(timestampMs).valueOf()}</List.Item>
+            }
+            { showTimestampInfo &&
+            <List.Item as="a">block timestamp={moment(blockTimestampMs).valueOf()}</List.Item>
+            }
           </List>
         </Table.Cell>
       </Table.Row>
@@ -150,4 +184,5 @@ class EventRow extends Component {
 }
 
 EventRow.Tag = Tag
-export default EventRow
+export { EventRow };
+export default connect(null, { toggleRowPrettyPrint })(EventRow);

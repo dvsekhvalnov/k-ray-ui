@@ -14,6 +14,44 @@ export const TRIGGER_TIMELINE_DETAILS="TIMELINE:TRIGGER_DETAILS"
 export const UPDATE_ITEMS_PER_PAGE="RESULTS:UPDATE_ITEMS_PER_PAGE"
 export const MAX_LINES_JSON="RESULTS:MAX_LINES_JSON"
 export const MAX_LINES_BINARY="RESULTS:MAX_LINES_BINARY"
+export const TOGGLE_JSON_PRETTY_PRINT="RESULTS:TOGGLE_JSON_PRETTY_PRINT"
+export const TOGGLE_ROW_PRETTY_PRINT="ROW:TOGGLE_PRETTY_PRINT"
+export const TOGGLE_TOPIC_DETAILS="RESULTS:TOGGLE_TOPIC_DETAILS"
+export const TOGGLE_EXTENDED_TIMESTAMP="RESULTS:TOGGLE_EXTENDED_TIMESTAMP"
+export const TOGGLE_ENRICHMENT_DETAILS="RESULTS:TOGGLE_ENRICHMENT_DETAILS"
+export const DISPLAY_RAW_KEY = "KEY:DISPLAY_RAW_KEY"
+export const TOGGLE_KEY_PRETTY_PRINT = "KEY:TOGGLE_PRETTY_PRINT"
+
+export const updateDisplayRawKey = (value="Auto") => ({
+    type: DISPLAY_RAW_KEY,
+    value: value,
+});
+
+export const toggleKeyPrettyPrint = (value) => ({
+    type: TOGGLE_KEY_PRETTY_PRINT,
+    value,
+});
+
+export const toggleEnrichmentDetails = () => ({
+    type: TOGGLE_ENRICHMENT_DETAILS,
+});
+
+export const toggleExtendedTimestamp = () => ({
+    type: TOGGLE_EXTENDED_TIMESTAMP,
+});
+
+export const toggleTopicDetails = () => ({
+    type: TOGGLE_TOPIC_DETAILS,
+});
+
+export const toggleJsonPrettyPrint = () => ({
+    type: TOGGLE_JSON_PRETTY_PRINT,
+});
+
+export const toggleRowPrettyPrint = (value) => ({
+    type: TOGGLE_ROW_PRETTY_PRINT,
+    value,
+});
 
 export const updateTimerange = (value=last_5_min) => ({
     type: UPDATE_TIME_RANGE,

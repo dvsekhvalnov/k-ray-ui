@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Tab, Grid } from "semantic-ui-react"
-import TimelinePanel from './TimelinePanel'
-import EventsPanel from './EventsPanel'
+import TimelinePanel from "./TimelinePanel"
+import EventsPanel from "./EventsPanel"
 
 class EventsPane extends Component {
 	render() {

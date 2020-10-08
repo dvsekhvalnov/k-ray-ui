@@ -4,15 +4,22 @@ import moment from "moment";
 
 import {
   COMPACT_TIMELINE,
+  DISPLAY_RAW_KEY,
   HIDE_TIMELINE,
   MAX_LINES_BINARY,
   MAX_LINES_JSON,
   RESET_SEARCH,
+  TOGGLE_ENRICHMENT_DETAILS,
+  TOGGLE_EXTENDED_TIMESTAMP,
+  TOGGLE_JSON_PRETTY_PRINT,
+  TOGGLE_KEY_PRETTY_PRINT,
+  TOGGLE_ROW_PRETTY_PRINT,
+  TOGGLE_TOPIC_DETAILS,
   TRIGGER_TIMELINE_DETAILS,
   UPDATE_ITEMS_PER_PAGE,
   UPDATE_PAGE,
   UPDATE_QUERY,
-  UPDATE_TIME_RANGE,
+  UPDATE_TIME_RANGE
 } from '../actions';
 import { SEARCH_SUCCESS, SEARCH_REQUEST } from '../actions-api';
 import {getVisiblePages} from "../selectors/pager"
@@ -38,11 +45,18 @@ const initial = {
   },
   results: {
       itemsPerPage: 50,
+      general: {
+        topicDetails: true,
+        extendedTimestampDetails: true,
+        enrichmentDetails: true,
+      },
       json: {
         maxLines: "all",
+        prettyPrint: false,
       },
       binary: {
         maxLines: "all",
+        prettyPrint: false,
       },
   },
   time: {
@@ -56,6 +70,117 @@ const initial = {
 
 export default (state = initial, action) => {
   switch (action.type) {
+
+    case DISPLAY_RAW_KEY : {
+      const row = state.data.rows[action.value]
+      const newRow = {
+        ...row,
+        ui: {
+          ...row.ui,
+          key: {
+            ...row.ui.key,
+            displayRawAs: action.value,
+          }
+        },
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          rows:[
+            ...state.data.rows.slice(0, action.value),
+            newRow,
+            ...state.data.rows.slice(action.value + 1)
+          ],
+        },
+      };
+    }
+
+    case TOGGLE_KEY_PRETTY_PRINT : {
+      const row = state.data.rows[action.value]
+      const newRow = {
+        ...row,
+        ui: {
+          ...row.ui,
+          key: {
+            ...row.ui.key,
+            prettyPrint: !row.ui.key.prettyPrint,
+          }
+        },
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          rows:[
+            ...state.data.rows.slice(0, action.value),
+            newRow,
+            ...state.data.rows.slice(action.value + 1)
+          ],
+        },
+      };
+    }
+
+    case TOGGLE_JSON_PRETTY_PRINT : {
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          json: {
+            ...state.results.json,
+            prettyPrint: !state.results.json.prettyPrint,
+          }
+        },
+        data: {
+          ...state.data,
+          rows: _.map(state.data.rows, row => {
+            if(row.msg.value.type !== "json") {
+              return row;
+            }
+
+            return {
+              ...row,
+              ui: {
+                ...row.ui,
+                value: {
+                  ...row.ui.value,
+                  prettyPrint: !state.results.json.prettyPrint,
+                }
+              }
+            }
+          }),
+        },
+      };
+    }
+
+    case TOGGLE_ROW_PRETTY_PRINT : {
+
+      const row = state.data.rows[action.value]
+      const newRow = {
+        ...row,
+        ui: {
+          ...row.ui,
+          value: {
+            ...row.ui.value,
+            prettyPrint: !row.ui.value.prettyPrint,
+          }
+        },
+      }
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          rows:[
+            ...state.data.rows.slice(0, action.value),
+            newRow,
+            ...state.data.rows.slice(action.value + 1)
+          ],
+        },
+      };
+    }
 
     case RESET_SEARCH : {
       return {
@@ -150,6 +275,45 @@ export default (state = initial, action) => {
       };
     }
 
+    case TOGGLE_TOPIC_DETAILS : {
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          general: {
+            ...state.results.general,
+            topicDetails: !state.results.general.topicDetails,
+          }
+        },
+      };
+    }
+
+    case TOGGLE_EXTENDED_TIMESTAMP : {
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          general: {
+            ...state.results.general,
+            extendedTimestampDetails: !state.results.general.extendedTimestampDetails,
+          }
+        },
+      };
+    }
+
+    case TOGGLE_ENRICHMENT_DETAILS : {
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          general: {
+            ...state.results.general,
+            enrichmentDetails: !state.results.general.enrichmentDetails,
+          }
+        },
+      };
+    }
+
     case MAX_LINES_BINARY : {
       return {
         ...state,
@@ -188,12 +352,31 @@ export default (state = initial, action) => {
             ...state.data.offsets,
             ...action.payload.offsets
           },
-          rows: _.map(action.payload.rows, (msg) => {
-            if(msg.type === "json") {
+          rows: _.map(action.payload.rows, (msg, index) => {
+
+            if(msg.value.type === "json") {
               msg.value.value = Base64.decode(msg.value.value);
+              msg.value.structured = JSON.parse(msg.value.value);
             }
 
-            return msg
+            if(msg.key.type === "json") {
+              msg.key.value = Base64.decode(msg.key.value);
+              msg.key.structured = JSON.parse(msg.key.value);
+            }
+
+            return {
+              index,
+              ui: {
+                value: {
+                  prettyPrint: state.results[msg.value.type].prettyPrint,
+                },
+                key: {
+                  prettyPrint: state.results[msg.key.type].prettyPrint,
+                  displayRawAs: "Auto"
+                }
+              },
+              msg
+            }
           }),
         }
       }

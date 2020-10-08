@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import React, { Component } from 'react';
 
+import { push } from "../../utils/url";
 import {
+  toggleEnrichmentDetails,
+  toggleExtendedTimestamp,
+  toggleJsonPrettyPrint,
+  toggleTopicDetails,
   updateItemsPerPage,
   updateMaxLinesBinary,
   updateMaxLinesJson,
 } from '../../actions';
-
-import { push } from "../../utils/url";
 
 class FormatResultsMenu extends Component {
 
@@ -50,7 +53,31 @@ class FormatResultsMenu extends Component {
                   onClick={ (e,d) => { this.onItemsPerPageChange(50); }}
                 />
     			      <Dropdown.Divider />
-    				  	<Dropdown.Header content="Max lines (JSON)" />
+                <Dropdown.Header content="General" />
+                <Dropdown.Item
+                  text="Topic details"
+                  active={ this.props.general.topicDetails } onClick={ (e,d) => {
+                  this.props.toggleTopicDetails()
+                }}
+                />
+                <Dropdown.Item
+                  text="Extended timestamp info"
+                  active={ this.props.general.extendedTimestampDetails } onClick={ (e,d) => {
+                  this.props.toggleExtendedTimestamp()
+                }}
+                />
+                <Dropdown.Item
+                  text="Enrichement details"
+                  active={ this.props.general.enrichmentDetails } onClick={ (e,d) => {
+                  this.props.toggleEnrichmentDetails()
+                }}
+                />
+                <Dropdown.Divider />
+    				  	<Dropdown.Header content="JSON formatting" />
+                <Dropdown.Item text="Always pretty-print" active={ this.props.json.prettyPrint } onClick={ (e,d) => {
+                  this.props.toggleJsonPrettyPrint()
+                }}
+                />
     			      <Dropdown.Item text="5 lines" active={ this.props.json.maxLines == "five" } onClick={ (e,d) => {
                 	this.props.updateMaxLinesJson("five");
               	}} />
@@ -63,7 +90,7 @@ class FormatResultsMenu extends Component {
     			      <Dropdown.Item text="All lines" active={ this.props.json.maxLines == "all" } onClick={ (e,d) => {
                 	this.props.updateMaxLinesJson("all");
               	}} />
-    				  	<Dropdown.Header content="Max lines (binary)" />
+    				  	<Dropdown.Header content="Binary formatting" />
     			      <Dropdown.Item text="1 line" active={ this.props.binary.maxLines == "one" } onClick={ (e,d) => {
                 	this.props.updateMaxLinesBinary("one");
               	}} />
@@ -87,4 +114,5 @@ class FormatResultsMenu extends Component {
 export { FormatResultsMenu };
 
 export default withRouter(connect(null,
-	{ updateMaxLinesBinary, updateMaxLinesJson, updateItemsPerPage })(FormatResultsMenu));
+	{ updateMaxLinesBinary, updateMaxLinesJson, updateItemsPerPage,
+    toggleJsonPrettyPrint, toggleTopicDetails, toggleExtendedTimestamp, toggleEnrichmentDetails })(FormatResultsMenu));

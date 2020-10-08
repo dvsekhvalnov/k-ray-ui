@@ -11,7 +11,7 @@ SPA frontend implemented on top of (not so new versions):
  - Redux
  - awesome Semantic-UI react bindings (https://react.semantic-ui.com/)
 
-Visual design heavily expired by Splunk.
+Visual design heavily inspired by Splunk.
 
 ## Screenshots
 <p>

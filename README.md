@@ -14,6 +14,7 @@ SPA frontend implemented on top of (not so new versions):
 Visual design heavily expired by Splunk.
 
 ## Screenshots
+![Explore every bit of kafka](https://github.com/dvsekhvalnov/web-static-content/blob/master/k-ray-ui/images/explore-kafka-stream-internals.png?raw=true | width=300)
 
 ## Maintainers wanted
 As with many former hackaton projects nobody actively working on it fulltime. If somebody from
